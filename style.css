@@ -300,3 +300,59 @@ h2 { font-size: clamp(2rem, 5vw, 2.8rem); color: var(--marinho); margin-bottom: 
 @media (max-width: 380px) {
   .redes { grid-template-columns: 1fr; }
 }
+
+/* ---------- Dois setores ---------- */
+.setor-cabeca { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin-bottom: 8px; }
+.selo-setor {
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; margin-bottom: 20px;
+  background: rgba(37, 211, 102, .14); color: #1faa55; border: 1px solid rgba(37, 211, 102, .4);
+  font-weight: 700; font-size: .85rem; padding: 8px 14px; border-radius: 999px;
+}
+.selo-carrinho { background: rgba(30, 107, 255, .1); color: var(--azul); border-color: rgba(30, 107, 255, .35); }
+.btn-whats { display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: var(--branco); }
+.btn-whats:hover { box-shadow: 0 10px 24px rgba(37, 211, 102, .5); }
+.btn.no-carrinho { background: var(--marinho); box-shadow: none; }
+
+/* Setor 1: barcos e motores (fundo escuro, cards grandes) */
+.setor-grande { background: linear-gradient(180deg, var(--marinho) 0%, var(--marinho-2) 100%); color: var(--branco); }
+.setor-grande h2 { color: var(--branco); }
+.setor-grande .kicker { color: var(--azul-claro); }
+.setor-grande .aviso { color: rgba(255,255,255,.72); }
+.setor-grande .selo-setor { background: rgba(37, 211, 102, .16); color: #5ce68f; }
+.grade-grande { display: grid; gap: 20px; }
+.card-grande {
+  display: grid; background: rgba(255,255,255,.05); border: 1px solid rgba(79, 163, 255, .25);
+  border-radius: var(--raio); overflow: hidden; transition: border-color .2s, transform .2s;
+}
+.card-grande:hover { border-color: var(--azul-claro); transform: translateY(-3px); }
+.card-grande .card-img { background: #030a1f; }
+.card-grande .card-img img { width: 100%; aspect-ratio: 1 / 1; object-fit: contain; }
+.card-grande h3 { font-size: 1.7rem; color: var(--branco); }
+.card-grande .card-cat { color: var(--azul-claro); }
+.card-grande .card-desc { color: rgba(255,255,255,.72); }
+.card-grande .preco { color: var(--branco); font-size: 1.8rem; }
+.card-grande .preco s, .card-grande .preco small { color: rgba(255,255,255,.6); }
+.card-grande .card-extra { color: var(--agua); }
+.card-grande .btn-whats { width: auto; white-space: nowrap; padding: 12px 20px; font-size: .95rem; }
+
+/* Como comprar: dois caminhos */
+.caminhos { display: grid; gap: 16px; }
+.caminho { background: var(--gelo); border-radius: var(--raio); padding: 24px; }
+.caminho h3 { font-size: 1.6rem; color: var(--marinho); margin-bottom: 12px; }
+.caminho ol { list-style: none; counter-reset: passo; display: grid; gap: 10px; }
+.caminho li { counter-increment: passo; display: flex; gap: 12px; align-items: flex-start; color: var(--cinza); }
+.caminho li::before {
+  content: counter(passo); flex-shrink: 0; display: grid; place-items: center; width: 28px; height: 28px;
+  border-radius: 50%; background: var(--azul); color: var(--branco); font-weight: 700; font-size: .85rem;
+}
+.caminho:first-child li::before { background: #1faa55; }
+.caminho b { color: var(--marinho); }
+
+@media (min-width: 640px) {
+  .caminhos { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 900px) {
+  .grade-grande { grid-template-columns: 1fr 1fr; }
+  .card-grande { grid-template-columns: 1fr 1.1fr; }
+  .card-grande .card-img img { height: 100%; }
+}

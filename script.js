@@ -6,9 +6,19 @@ const REDES = {
   linkedin: "",  // idem
 };
 
+// Produto acima desse valor (ou sem preço) NÃO vai pro carrinho: a negociação é direto no WhatsApp.
+// Pra forçar um produto específico, use no produtos.js:  setor: "whats"  ou  setor: "carrinho"
+const LIMITE_CARRINHO = 3000;
+
 const brl = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 const linkWhats = (msg) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
 const porId = (id) => PRODUTOS.find((p) => p.id === id);
+const vaiProCarrinho = (p) => (p.setor ? p.setor === "carrinho" : p.preco != null && p.preco <= LIMITE_CARRINHO);
+const ICONE_WHATS = `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>`;
+
+const precoTexto = (p) => (p.preco == null ? "consultar" : (p.aPartir ? "a partir de " : "") + brl(p.preco));
+const msgNegociar = (p) =>
+  `Oi, Rafa! Vi no site o ${p.nome} (${precoTexto(p)}) e quero negociar. Ainda tem disponível? Como ficam as condições de pagamento?`;
 
 // ---------- Vitrine ----------
 function precoHTML(p) {
@@ -18,9 +28,30 @@ function precoHTML(p) {
   return `<p class="preco">${de}${ap}${brl(p.preco)}</p>`;
 }
 
-function renderCatalogo(filtro) {
-  const lista = filtro === "Todos" ? PRODUTOS : PRODUTOS.filter((p) => p.categoria === filtro);
-  document.getElementById("grade").innerHTML = lista
+const botaoNegociar = (p, extraClasse = "") =>
+  `<a class="btn btn-whats ${extraClasse}" target="_blank" rel="noopener" href="${linkWhats(msgNegociar(p))}">${ICONE_WHATS} Negociar no WhatsApp</a>`;
+
+// Setor 1: barcos e motores (direto no WhatsApp)
+function renderGrandes() {
+  document.getElementById("grade-grande").innerHTML = PRODUTOS.filter((p) => !vaiProCarrinho(p))
+    .map((p) => `<article class="card-grande">
+        <div class="card-img"><img src="img/${p.foto}" alt="${p.nome}" loading="lazy">
+          ${p.precoDe ? `<span class="selo">Promoção</span>` : ""}</div>
+        <div class="card-corpo">
+          <span class="card-cat">${p.categoria}</span>
+          <h3>${p.nome}</h3>
+          <p class="card-desc">${p.desc}</p>
+          ${precoHTML(p)}
+          ${p.extra ? `<p class="card-extra">${p.extra}</p>` : ""}
+          <div class="card-acoes">${botaoNegociar(p)}</div>
+        </div>
+      </article>`)
+    .join("");
+}
+
+// Setor 2: acessórios (carrinho)
+function renderCatalogo() {
+  document.getElementById("grade").innerHTML = PRODUTOS.filter(vaiProCarrinho)
     .map((p) => `<article class="card">
         <div class="card-img"><img src="img/${p.foto}" alt="${p.nome}" loading="lazy">
           ${p.precoDe ? `<span class="selo">Promoção</span>` : ""}</div>
@@ -31,26 +62,19 @@ function renderCatalogo(filtro) {
           ${precoHTML(p)}
           ${p.extra ? `<p class="card-extra">${p.extra}</p>` : ""}
           <div class="card-acoes">
-            <button class="btn btn-sm" data-add="${p.id}">Adicionar ao pedido</button>
-            <a class="link-whats" target="_blank" rel="noopener"
-              href="${linkWhats(`Oi, Rafa! Vi no site o ${p.nome} e fiquei interessado. Pode me passar mais detalhes?`)}">Perguntar no WhatsApp</a>
+            <button class="btn btn-sm" data-add="${p.id}">Adicionar ao carrinho</button>
           </div>
         </div>
       </article>`)
     .join("");
 }
 
-function renderFiltros() {
-  const cats = ["Todos", ...new Set(PRODUTOS.map((p) => p.categoria))];
-  const box = document.getElementById("filtros");
-  box.innerHTML = cats
-    .map((c, i) => `<button class="filtro${i === 0 ? " ativo" : ""}" data-cat="${c}">${c}</button>`)
-    .join("");
-  box.addEventListener("click", (e) => {
-    const b = e.target.closest(".filtro");
-    if (!b) return;
-    box.querySelectorAll(".filtro").forEach((x) => x.classList.toggle("ativo", x === b));
-    renderCatalogo(b.dataset.cat);
+// Mostra nos botões quantos de cada já estão no carrinho
+function atualizarBotoes() {
+  document.querySelectorAll("[data-add]").forEach((b) => {
+    const qtd = pedido[b.dataset.add] || 0;
+    b.textContent = qtd ? `✓ No carrinho (${qtd}) · +1` : "Adicionar ao carrinho";
+    b.classList.toggle("no-carrinho", qtd > 0);
   });
 }
 
@@ -60,7 +84,7 @@ try { pedido = JSON.parse(localStorage.getItem("rafa-pedido")) || {}; } catch (e
 const salvar = () => { try { localStorage.setItem("rafa-pedido", JSON.stringify(pedido)); } catch (e) {} };
 
 const precoUnit = (p, qtd) => (p.atacado && qtd >= p.atacado.min ? p.atacado.preco : p.preco);
-const itensPedido = () => Object.entries(pedido).map(([id, qtd]) => ({ p: porId(id), qtd })).filter((i) => i.p);
+const itensPedido = () => Object.entries(pedido).map(([id, qtd]) => ({ p: porId(id), qtd })).filter((i) => i.p && vaiProCarrinho(i.p));
 
 function avisar(txt) {
   const t = document.getElementById("toast");
@@ -71,10 +95,11 @@ function avisar(txt) {
 }
 
 function adicionar(id) {
+  if (!porId(id) || !vaiProCarrinho(porId(id))) return;
   pedido[id] = (pedido[id] || 0) + 1;
   salvar();
   renderPedido();
-  avisar(`${porId(id).nome} foi pro pedido`);
+  avisar(`${porId(id).nome} foi pro carrinho`);
 }
 
 function mudarQtd(id, delta) {
@@ -90,11 +115,12 @@ function renderPedido() {
   const badge = document.getElementById("badge-carrinho");
   badge.textContent = qtdTotal;
   badge.hidden = qtdTotal === 0;
+  atualizarBotoes();
 
   const box = document.getElementById("carrinho-itens");
   document.getElementById("carrinho-rodape").hidden = itens.length === 0;
   if (!itens.length) {
-    box.innerHTML = `<p class="vazio">Teu pedido está vazio.<br>Escolhe alguma coisa na vitrine 😉</p>`;
+    box.innerHTML = `<p class="vazio">Teu carrinho está vazio.<br>Dá uma olhada nos acessórios 😉</p>`;
     return;
   }
   box.innerHTML = itens
@@ -164,7 +190,7 @@ function iniciarCarrossel() {
   trilho.innerHTML = CARROSSEL.map((s) => `<figure class="slide">
       <img src="img/${s.foto}" alt="${s.titulo}" loading="lazy">
       <figcaption><strong>${s.titulo}</strong><span>${s.texto}</span>
-        ${s.produto ? `<button class="btn btn-sm" data-add="${s.produto}">Adicionar ao pedido</button>` : ""}
+        ${s.produto ? (vaiProCarrinho(porId(s.produto)) ? `<button class="btn btn-sm" data-add="${s.produto}">Adicionar ao carrinho</button>` : botaoNegociar(porId(s.produto), "btn-sm")) : ""}
       </figcaption>
     </figure>`).join("");
   pontos.innerHTML = CARROSSEL.map((_, i) => `<button aria-label="Ir para foto ${i + 1}" data-i="${i}"></button>`).join("");
@@ -231,8 +257,8 @@ document.querySelectorAll("[data-rede]").forEach((a) => {
 });
 document.getElementById("ano").textContent = new Date().getFullYear();
 
-renderFiltros();
-renderCatalogo("Todos");
-renderPedido();
+renderGrandes();
+renderCatalogo();
 iniciarCarrossel();
+renderPedido();
 statusLoja();

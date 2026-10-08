@@ -28,11 +28,12 @@
       <span class="l1">Rafa</span><span class="l2">Náutica e Acessórios</span>
     </a>
     <nav>
-      <a href="#vitrine">Produtos</a>
+      <a href="#barcos">Barcos e motores</a>
+      <a href="#acessorios">Acessórios</a>
       <a href="#contato">Contato</a>
       <a href="#visite">Onde fica</a>
     </nav>
-    <button class="btn-carrinho" id="abrir-carrinho" aria-label="Ver meu pedido">
+    <button class="btn-carrinho" id="abrir-carrinho" aria-label="Ver meu carrinho">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2"/><circle cx="10" cy="20.5" r="1.3"/><circle cx="17.5" cy="20.5" r="1.3"/></svg>
       <span class="badge" id="badge-carrinho" hidden>0</span>
     </button>
@@ -49,7 +50,7 @@
         <span><strong>Av. Ataíde Teodoro da Silva, 536</strong>Solar do Vale, saída para Angélica · Ivinhema - MS</span>
       </div>
       <div class="acoes">
-        <a class="btn" href="#vitrine">Ver produtos</a>
+        <a class="btn" href="#barcos">Ver produtos</a>
         <a class="btn btn-ghost" data-whats target="_blank" rel="noopener">Falar com o Rafa</a>
       </div>
       <p class="aberto" id="status-loja">Seg a sex, das 7h30 às 17h</p>
@@ -76,12 +77,33 @@
     <div class="pontos" id="pontos"></div>
   </section>
 
-  <section id="vitrine" class="vitrine">
+  <!-- Setor 1: produtos de valor alto, negociação direto no WhatsApp -->
+  <section id="barcos" class="setor-grande">
     <div class="secao">
-      <p class="kicker">Vitrine</p>
-      <h2>O que tem na loja</h2>
-      <p class="aviso">Preços dos posts do nosso Instagram, podem mudar. Adiciona o que quiser no pedido e confirma tudo com o Rafa no WhatsApp.</p>
-      <div id="filtros" class="filtros"></div>
+      <div class="setor-cabeca">
+        <div>
+          <p class="kicker">Barcos e motores</p>
+          <h2>Negócio grande a gente fecha conversando</h2>
+          <p class="aviso">Barco e motor não vão pro carrinho. Toca em "Negociar no WhatsApp" e combina com o Rafa
+            a condição de pagamento, o parcelamento e a retirada. Preços dos posts do Instagram, podem mudar.</p>
+        </div>
+        <span class="selo-setor">💬 Direto no WhatsApp</span>
+      </div>
+      <div id="grade-grande" class="grade-grande"></div>
+    </div>
+  </section>
+
+  <!-- Setor 2: acessórios, vão pro carrinho -->
+  <section id="acessorios" class="vitrine">
+    <div class="secao">
+      <div class="setor-cabeca">
+        <div>
+          <p class="kicker">Acessórios</p>
+          <h2>Monta teu pedido aqui</h2>
+          <p class="aviso">Coloca no carrinho o que precisa pro passeio ou pra pescaria e manda tudo de uma vez pro WhatsApp.</p>
+        </div>
+        <span class="selo-setor selo-carrinho">🛒 Vai pro carrinho</span>
+      </div>
       <div id="grade" class="grade"></div>
     </div>
   </section>
@@ -89,11 +111,24 @@
   <section id="comprar" class="secao">
     <p class="kicker">Simples assim</p>
     <h2>Como comprar</h2>
-    <ol class="passos">
-      <li><span>1</span><h3>Escolhe</h3><p>Clica em "Adicionar ao pedido" nos produtos que você quer.</p></li>
-      <li><span>2</span><h3>Manda</h3><p>Abre o carrinho e toca em "Enviar pedido". A lista vai prontinha pro WhatsApp do Rafa.</p></li>
-      <li><span>3</span><h3>Fecha</h3><p>O Rafa confirma o estoque e a forma de pagamento. Dá pra parcelar no cartão.</p></li>
-    </ol>
+    <div class="caminhos">
+      <div class="caminho">
+        <h3>Barcos e motores</h3>
+        <ol>
+          <li>Escolhe o barco ou motor</li>
+          <li>Toca em <b>Negociar no WhatsApp</b></li>
+          <li>Combina com o Rafa pagamento e retirada</li>
+        </ol>
+      </div>
+      <div class="caminho">
+        <h3>Acessórios</h3>
+        <ol>
+          <li>Toca em <b>Adicionar ao carrinho</b></li>
+          <li>Abre o carrinho lá em cima e ajusta as quantidades</li>
+          <li>Envia o pedido. O Rafa confirma o estoque e o pagamento</li>
+        </ol>
+      </div>
+    </div>
   </section>
 
   <section id="contato" class="contato">
@@ -168,9 +203,9 @@
 
   <!-- Carrinho (pedido) -->
   <div class="fundo-carrinho" id="fundo-carrinho" hidden></div>
-  <aside class="carrinho" id="carrinho" aria-label="Meu pedido" aria-hidden="true">
+  <aside class="carrinho" id="carrinho" aria-label="Meu carrinho" aria-hidden="true">
     <div class="carrinho-topo">
-      <h3>Meu pedido</h3>
+      <h3>Meu carrinho</h3>
       <button class="fechar" id="fechar-carrinho" aria-label="Fechar">×</button>
     </div>
     <div class="carrinho-itens" id="carrinho-itens"></div>
