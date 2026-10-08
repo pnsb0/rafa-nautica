@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+<defs><linearGradient id="c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe9d6"/><stop offset="1" stop-color="#eef7f0"/></linearGradient></defs>
+<rect width="400" height="300" fill="url(#c)"/>
+<path d="M0 185 Q100 170 200 182 T400 178 V195 H0Z" fill="#6aa57a" opacity=".6"/>
+<rect y="192" width="400" height="108" fill="#2a7aa6"/>
+<path d="M70 184 L345 184 L312 214 L88 214 Z" fill="#b7c2cb"/>
+<path d="M70 184 L345 184 L341 191 L72 191 Z" fill="#6b7a86"/>
+<rect x="150" y="174" width="44" height="10" rx="2" fill="#6b7a86"/>
+<rect x="240" y="174" width="44" height="10" rx="2" fill="#6b7a86"/>
+<rect x="44" y="150" width="30" height="36" rx="7" fill="#0c2a43"/>
+<rect x="54" y="184" width="9" height="34" fill="#0c2a43"/>
+<path d="M290 120 L330 60" stroke="#5a4632" stroke-width="3"/>
+<path d="M330 60 Q345 120 340 182" stroke="#0c2a43" stroke-width="1.2" fill="none"/>
+<path d="M0 230 Q50 222 100 230 T200 230 T300 230 T400 230 V300 H0Z" fill="#1d5f86"/>
+</svg>
